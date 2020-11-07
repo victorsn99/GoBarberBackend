@@ -1,4 +1,5 @@
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import { classToClass } from 'class-transformer';
 import { Request, Response} from 'express';
 import { container } from 'tsyringe';
 import UsersRepository from '../../typeorm/repositories/UsersRepository';
@@ -12,8 +13,6 @@ export default class UserAvatarController {
             avatarFilename: request.file.filename,
         });
 
-        delete user.password;
-
-        return response.json(user);
+        return response.json(classToClass(user));
     }
 }

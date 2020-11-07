@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import FakeUserRepository from '../interfaces/fakes/FakeUserRepository';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import FakeUserTokenRepository from '../interfaces/fakes/FakeUserTokenRepository';

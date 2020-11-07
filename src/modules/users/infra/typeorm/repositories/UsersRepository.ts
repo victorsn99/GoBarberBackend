@@ -1,8 +1,9 @@
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, Not } from 'typeorm';
 import IUsersRepository from '@modules/users/interfaces/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import User from '../entities/User';
+import usersRouter from '../../http/routes/users.routes';
 
 class UsersRepository implements IUsersRepository {
   private ormRepository: Repository<User>;
@@ -11,7 +12,6 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    //const findAppointment = this.appointments.find(appointment => isEqual(date, appointment.date));
 
     const findUser = await this.ormRepository.findOne({
       where: { id },
@@ -21,13 +21,27 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    //const findAppointment = this.appointments.find(appointment => isEqual(date, appointment.date));
 
     const findUser = await this.ormRepository.findOne({
       where: { email },
     });
 
     return findUser;
+  }
+
+  public async findAllProvidersExceptTheIdEntered(except_id: string): Promise<User[]> {
+    let users: User[];
+
+    if (except_id) {
+      users = await this.ormRepository.find({
+        where: {
+          id: Not(except_id),
+        }
+      });
+    } else {
+      users = await this.ormRepository.find();
+    }
+    return users;
   }
 
   public async create({ name, email, password }: ICreateUserDTO): Promise<User> {
